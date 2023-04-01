@@ -48,7 +48,18 @@ Method Declaration
 Static Declaration
 ------------------
 
-sss
+Idea here is that we want to seperate the static methods and fields from class ones, just like Scala.
+We have not implemented static fields yet because of recursive dependencies.
+
+.. code-block::
+
+  STATIC Person
+  BEGIN
+    FUNC compare(p1: Person, p2: Person) -> Int
+    BEGIN
+        RETURN p1.getAge() - p2.getAge()
+    END
+  END
 
 Interface Declaration
 ---------------------

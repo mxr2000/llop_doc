@@ -114,7 +114,17 @@
 </section>
 <section id="static-declaration">
 <h2>Static Declaration<a class="headerlink" href="#static-declaration" title="Permalink to this heading"></a></h2>
-<p>sss</p>
+<p>Idea here is that we want to seperate the static methods and fields from class ones, just like Scala.
+We have not implemented static fields yet because of recursive dependencies.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">STATIC</span> <span class="n">Person</span>
+<span class="n">BEGIN</span>
+  <span class="n">FUNC</span> <span class="n">compare</span><span class="p">(</span><span class="n">p1</span><span class="p">:</span> <span class="n">Person</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="n">Person</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span>
+  <span class="n">BEGIN</span>
+      <span class="n">RETURN</span> <span class="n">p1</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span>
+  <span class="n">END</span>
+<span class="n">END</span>
+</pre></div>
+</div>
 </section>
 <section id="interface-declaration">
 <h2>Interface Declaration<a class="headerlink" href="#interface-declaration" title="Permalink to this heading"></a></h2>
