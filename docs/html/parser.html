@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to llop’s documentation! &mdash; llop  documentation</title>
+  <title>2. Parser &mdash; llop  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,7 +17,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="1. Introduction" href="introduction.html" /> 
+    <link rel="prev" title="1. Introduction" href="introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -28,7 +28,7 @@
 
           
           
-          <a href="#" class="icon icon-home">
+          <a href="index.html" class="icon icon-home">
             llop
           </a>
 <div role="search">
@@ -39,9 +39,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parser.html">2. Parser</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Parser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#grammer-definition">2.1. Grammer Definition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-declaration">2.1.1. Class Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#method-declaration">2.1.2. Method Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#static-declaration">2.1.3. Static Declaration</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -50,17 +58,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">llop</a>
+          <a href="index.html">llop</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to llop’s documentation!</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2. </span>Parser</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/parser.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -68,33 +76,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-llop-s-documentation">
-<h1>Welcome to llop’s documentation!<a class="headerlink" href="#welcome-to-llop-s-documentation" title="Permalink to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parser.html">2. Parser</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parser.html#grammer-definition">2.1. Grammer Definition</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="code_generation.html">Code Generation</a></li>
-</ul>
+  <section id="parser">
+<span id="id1"></span><h1><span class="section-number">2. </span>Parser<a class="headerlink" href="#parser" title="Permalink to this heading"></a></h1>
+<section id="grammer-definition">
+<h2><span class="section-number">2.1. </span>Grammer Definition<a class="headerlink" href="#grammer-definition" title="Permalink to this heading"></a></h2>
+<section id="class-declaration">
+<h3><span class="section-number">2.1.1. </span>Class Declaration<a class="headerlink" href="#class-declaration" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><p>A class declaration, with its super class and the interfaces it implements</p>
+</div></blockquote>
+<div class="highlight-lean notranslate"><div class="highlight"><pre><span></span><span class="kd">inductive</span> <span class="n">prop_var</span> <span class="o">:</span> <span class="kt">Type</span>
+<span class="bp">|</span> <span class="n">x</span>
+<span class="bp">|</span> <span class="n">y</span>
+<span class="bp">|</span> <span class="n">z</span>
+
+<span class="kn">open</span> <span class="n">prop_var</span>
+</pre></div>
 </div>
 </section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+<section id="method-declaration">
+<h3><span class="section-number">2.1.2. </span>Method Declaration<a class="headerlink" href="#method-declaration" title="Permalink to this heading"></a></h3>
+</section>
+<section id="static-declaration">
+<h3><span class="section-number">2.1.3. </span>Static Declaration<a class="headerlink" href="#static-declaration" title="Permalink to this heading"></a></h3>
+</section>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="introduction.html" class="btn btn-neutral float-right" title="1. Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="introduction.html" class="btn btn-neutral float-left" title="1. Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

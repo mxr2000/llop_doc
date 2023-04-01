@@ -8,7 +8,12 @@ Welcome to llop's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :numbered:
+
+   introduction
+   parser
+   code_generation
+
 
 
 
