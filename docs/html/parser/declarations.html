@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Declarations &mdash; llop  documentation</title>
+  <title>Statements &mdash; llop  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -59,7 +59,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Declarations</li>
+      <li class="breadcrumb-item active">Statements</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/parser/declarations.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -69,8 +69,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="declarations">
-<h1>Declarations<a class="headerlink" href="#declarations" title="Permalink to this heading"></a></h1>
+  <section id="statements">
+<h1>Statements<a class="headerlink" href="#statements" title="Permalink to this heading"></a></h1>
+<section id="variable-declaration">
+<h2>Variable Declaration<a class="headerlink" href="#variable-declaration" title="Permalink to this heading"></a></h2>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VAR</span> <span class="n">age</span><span class="p">:</span> <span class="n">Int</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">variableDeclStatement</span><span class="p">:</span><span class="w"> </span><span class="no">VAR</span><span class="w"> </span><span class="no">IDENTIFIER</span><span class="w"> </span><span class="s1">&#39;:&#39;</span><span class="w"> </span><span class="nv">type</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
