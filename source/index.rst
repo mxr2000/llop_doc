@@ -12,14 +12,8 @@ Welcome to llop's documentation!
 
    introduction
    parser
+   semantics
    code_generation
+   
+   
 
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
