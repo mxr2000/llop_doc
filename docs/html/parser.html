@@ -53,6 +53,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#statements">2.2. Statements</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#variable-declaration">2.2.1. Variable Declaration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#if-statement">2.2.2. If Statement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#while-statement">2.2.3. While Statement</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#expressions">2.3. Expressions</a></li>
@@ -172,6 +173,17 @@ We have not implemented static fields yet because of recursive dependencies.</p>
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">ifStatement</span><span class="p">:</span><span class="w"> </span><span class="no">IF</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="no">THEN</span><span class="w"> </span><span class="nv">stmt</span><span class="w"> </span><span class="o">(</span><span class="no">ELSE</span><span class="w"> </span><span class="nv">stmt</span><span class="o">)?</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="while-statement">
+<h3><span class="section-number">2.2.3. </span>While Statement<a class="headerlink" href="#while-statement" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WHILE</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">whileStatement</span><span class="p">:</span><span class="w"> </span><span class="no">WHILE</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="nv">stmt</span>
 <span class="p">;</span>
 </pre></div>
 </div>

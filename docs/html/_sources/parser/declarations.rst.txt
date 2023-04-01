@@ -31,3 +31,16 @@ If Statement
 
     ifStatement: IF '(' expr ')' THEN stmt (ELSE stmt)?
     ;
+
+While Statement
+------------
+
+.. code-block:: 
+
+    WHILE (self.salary > 0)
+        self.salary = self.salary - 1
+
+.. code-block:: antlr
+
+    whileStatement: WHILE '(' expr ')' stmt
+    ;
