@@ -40,9 +40,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parser.html">2. Parser</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../semantics.html">3. Semantics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../code_generation.html">4. Code Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ast.html">2. Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">3. Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantics.html">4. Semantics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code_generation.html">5. Code Generation</a></li>
 </ul>
 
         </div>
@@ -61,7 +62,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Statements</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/parser/declarations.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/ast/statements.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -102,6 +103,16 @@
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">whileStatement</span><span class="p">:</span><span class="w"> </span><span class="no">WHILE</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="nv">stmt</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="return-statement">
+<h2>Return Statement<a class="headerlink" href="#return-statement" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RETURN</span> <span class="n">p1</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">returnStatement</span><span class="p">:</span><span class="w"> </span><span class="no">RETURN</span><span class="w"> </span><span class="nv">expr</span>
 <span class="p">;</span>
 </pre></div>
 </div>

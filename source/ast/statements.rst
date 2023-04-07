@@ -33,7 +33,7 @@ If Statement
     ;
 
 While Statement
-------------
+---------------
 
 .. code-block:: 
 
@@ -43,4 +43,16 @@ While Statement
 .. code-block:: antlr
 
     whileStatement: WHILE '(' expr ')' stmt
+    ;
+
+Return Statement
+----------------
+
+.. code-block:: 
+
+    RETURN p1.getAge() - p2.getAge()
+
+.. code-block:: antlr
+
+    returnStatement: RETURN expr
     ;

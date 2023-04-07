@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. Parser &mdash; llop  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Parser" href="parser.html" />
+    <link rel="prev" title="1. Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            llop
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Parser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#top-level-declarations">2.1. Top Level Declarations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-declaration">2.1.1. Class Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#method-declaration">2.1.2. Method Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#static-declaration">2.1.3. Static Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interface-declaration">2.1.4. Interface Declaration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#statements">2.2. Statements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#variable-declaration">2.2.1. Variable Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#if-statement">2.2.2. If Statement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#while-statement">2.2.3. While Statement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#return-statement">2.2.4. Return Statement</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#expressions">2.3. Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#antlr">2.4. Antlr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parser.html">3. Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="semantics.html">4. Semantics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_generation.html">5. Code Generation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">llop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2. </span>Parser</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ast.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parser">
+<span id="ast"></span><h1><span class="section-number">2. </span>Parser<a class="headerlink" href="#parser" title="Permalink to this heading"></a></h1>
+<section id="top-level-declarations">
+<h2><span class="section-number">2.1. </span>Top Level Declarations<a class="headerlink" href="#top-level-declarations" title="Permalink to this heading"></a></h2>
+<section id="class-declaration">
+<h3><span class="section-number">2.1.1. </span>Class Declaration<a class="headerlink" href="#class-declaration" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><p>A class declaration, with its super class and the interfaces it implements</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CLASS</span> <span class="n">Person</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">[]</span>
+<span class="n">BEGIN</span>
+  <span class="n">VAR</span> <span class="n">age</span><span class="p">:</span> <span class="n">Int</span>
+  <span class="n">VAR</span> <span class="n">salary</span><span class="p">:</span> <span class="n">Int</span>
+
+  <span class="n">FUNC</span> <span class="n">init</span><span class="p">(</span><span class="n">age</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="n">salary</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Void</span>
+  <span class="n">BEGIN</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="n">salary</span>
+  <span class="n">END</span>
+
+  <span class="n">FUNC</span> <span class="n">getAge</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span>
+  <span class="n">BEGIN</span>
+      <span class="n">RETURN</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span>
+  <span class="n">END</span>
+
+  <span class="n">FUNC</span> <span class="n">getSalary</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span>
+  <span class="n">BEGIN</span>
+      <span class="n">RETURN</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span>
+  <span class="n">END</span>
+<span class="n">END</span>
+</pre></div>
+</div>
+</section>
+<section id="method-declaration">
+<h3><span class="section-number">2.1.2. </span>Method Declaration<a class="headerlink" href="#method-declaration" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><p>A method declaration includes its function signature and its body</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNC</span> <span class="n">getAge</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span>
+<span class="n">BEGIN</span>
+  <span class="n">RETURN</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span>
+<span class="n">END</span>
+</pre></div>
+</div>
+</section>
+<section id="static-declaration">
+<h3><span class="section-number">2.1.3. </span>Static Declaration<a class="headerlink" href="#static-declaration" title="Permalink to this heading"></a></h3>
+<p>Idea here is that we want to seperate the static methods and fields from class ones, just like Scala.
+We have not implemented static fields yet because of recursive dependencies.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">STATIC</span> <span class="n">Person</span>
+<span class="n">BEGIN</span>
+  <span class="n">FUNC</span> <span class="n">compare</span><span class="p">(</span><span class="n">p1</span><span class="p">:</span> <span class="n">Person</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="n">Person</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span>
+  <span class="n">BEGIN</span>
+      <span class="n">RETURN</span> <span class="n">p1</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span>
+  <span class="n">END</span>
+<span class="n">END</span>
+</pre></div>
+</div>
+</section>
+<section id="interface-declaration">
+<h3><span class="section-number">2.1.4. </span>Interface Declaration<a class="headerlink" href="#interface-declaration" title="Permalink to this heading"></a></h3>
+</section>
+</section>
+<section id="statements">
+<h2><span class="section-number">2.2. </span>Statements<a class="headerlink" href="#statements" title="Permalink to this heading"></a></h2>
+<section id="variable-declaration">
+<h3><span class="section-number">2.2.1. </span>Variable Declaration<a class="headerlink" href="#variable-declaration" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VAR</span> <span class="n">age</span><span class="p">:</span> <span class="n">Int</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">variableDeclStatement</span><span class="p">:</span><span class="w"> </span><span class="no">VAR</span><span class="w"> </span><span class="no">IDENTIFIER</span><span class="w"> </span><span class="s1">&#39;:&#39;</span><span class="w"> </span><span class="nv">type</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="if-statement">
+<h3><span class="section-number">2.2.2. </span>If Statement<a class="headerlink" href="#if-statement" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">IF</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">ELSE</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="mi">500</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">ifStatement</span><span class="p">:</span><span class="w"> </span><span class="no">IF</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="no">THEN</span><span class="w"> </span><span class="nv">stmt</span><span class="w"> </span><span class="o">(</span><span class="no">ELSE</span><span class="w"> </span><span class="nv">stmt</span><span class="o">)?</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="while-statement">
+<h3><span class="section-number">2.2.3. </span>While Statement<a class="headerlink" href="#while-statement" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WHILE</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">whileStatement</span><span class="p">:</span><span class="w"> </span><span class="no">WHILE</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="nv">stmt</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="return-statement">
+<h3><span class="section-number">2.2.4. </span>Return Statement<a class="headerlink" href="#return-statement" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RETURN</span> <span class="n">p1</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">getAge</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">returnStatement</span><span class="p">:</span><span class="w"> </span><span class="no">RETURN</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="expressions">
+<h2><span class="section-number">2.3. </span>Expressions<a class="headerlink" href="#expressions" title="Permalink to this heading"></a></h2>
+</section>
+<section id="antlr">
+<h2><span class="section-number">2.4. </span>Antlr<a class="headerlink" href="#antlr" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="1. Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parser.html" class="btn btn-neutral float-right" title="3. Parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, mxr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

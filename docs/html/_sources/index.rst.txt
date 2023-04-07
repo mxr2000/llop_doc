@@ -11,6 +11,7 @@ Welcome to llop's documentation!
    :numbered:
 
    introduction
+   ast
    parser
    semantics
    code_generation
