@@ -2,3 +2,4 @@
 
 .. include:: code_generation/title.rst
 .. include:: code_generation/class_representation.rst
+.. include:: code_generation/method_call.rst

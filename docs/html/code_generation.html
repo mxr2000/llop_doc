@@ -51,6 +51,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#type-id">5.1.3. Type Id</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#method-call">5.2. Method Call</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-overloadding">5.2.1. Function Overloadding</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -109,6 +113,32 @@ then the pointer of this method is the same with its parent’s one, else it wil
 </section>
 <section id="type-id">
 <h3><span class="section-number">5.1.3. </span>Type Id<a class="headerlink" href="#type-id" title="Permalink to this heading"></a></h3>
+</section>
+</section>
+<section id="method-call">
+<h2><span class="section-number">5.2. </span>Method Call<a class="headerlink" href="#method-call" title="Permalink to this heading"></a></h2>
+<section id="function-overloadding">
+<h3><span class="section-number">5.2.1. </span>Function Overloadding<a class="headerlink" href="#function-overloadding" title="Permalink to this heading"></a></h3>
+<p>A function is alloed to be overloaded. Overloadded function must have differnt parameters.</p>
+<p>Determine which overloadded function to run:
+1. Determine name is equal or not
+2. Determine types arguments can be upcasted ot not</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">FuncHeader</span><span class="w"> </span><span class="o">*&gt;</span><span class="w"> </span><span class="n">Context</span><span class="o">::</span><span class="n">getClassMethodIndex</span><span class="p">(</span>
+<span class="w">        </span><span class="o">::</span><span class="n">Type</span><span class="w"> </span><span class="o">*</span><span class="n">classType</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">name</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GenValue</span><span class="w"> </span><span class="o">*&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">params</span>
+<span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">classDecl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="o">-&gt;</span><span class="n">Classes</span><span class="p">()[</span><span class="n">classType</span><span class="o">-&gt;</span><span class="n">toString</span><span class="p">()];</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">classDecl</span><span class="o">-&gt;</span><span class="n">Methods</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">methods</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">methods</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+<span class="w">                         </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">name</span><span class="p">](</span><span class="n">FuncDecl</span><span class="w"> </span><span class="o">*</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">Header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isFunctionType</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">Header</span><span class="p">());</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">methods</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">methods</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">iter</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Header</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
