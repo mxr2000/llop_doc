@@ -71,7 +71,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#access">2.3.6. Access</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#and">2.3.7. And</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#or">2.3.8. Or</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#relational-expr">2.3.9. Relational Expr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#not">2.3.9. Not</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#relational-expr">2.3.10. Relational Expr</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#antlr">2.4. Antlr</a></li>
@@ -301,11 +302,11 @@ NUMBER : [0-9]+
 <section id="static-access">
 <h3><span class="section-number">2.3.3. </span>Static Access<a class="headerlink" href="#static-access" title="Permalink to this heading"></a></h3>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Personcompare</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Person</span><span class="p">::</span><span class="n">compare</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>referenceType &#39;::&#39; expr
-;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">staticAccessExpr</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">referenceType</span><span class="w"> </span><span class="s1">&#39;::&#39;</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -315,8 +316,8 @@ NUMBER : [0-9]+
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eat</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>IDENTIFIER argumentList
-;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">funCallExpr</span><span class="p">:</span><span class="w"> </span><span class="no">IDENTIFIER</span><span class="w"> </span><span class="nv">argumentList</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -364,8 +365,19 @@ NUMBER : [0-9]+
 </pre></div>
 </div>
 </section>
+<section id="not">
+<h3><span class="section-number">2.3.9. </span>Not<a class="headerlink" href="#not" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NOT</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">notExpr</span><span class="p">:</span><span class="w"> </span><span class="no">NOT</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
 <section id="relational-expr">
-<h3><span class="section-number">2.3.9. </span>Relational Expr<a class="headerlink" href="#relational-expr" title="Permalink to this heading"></a></h3>
+<h3><span class="section-number">2.3.10. </span>Relational Expr<a class="headerlink" href="#relational-expr" title="Permalink to this heading"></a></h3>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">&gt;=</span> <span class="mi">9</span>
 </pre></div>
