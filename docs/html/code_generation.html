@@ -55,6 +55,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-overloadding">5.2.1. Function Overloadding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-method-call">5.2.2. Class Method Call</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#static-method-call">5.2.3. Static Method Call</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#branches">5.2.4. Branches</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#if-statement">5.2.4.1. If Statement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#while-statement">5.2.4.2. While Statement</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -212,6 +217,59 @@ then the pointer of this method is the same with its parent’s one, else it wil
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="branches">
+<h3><span class="section-number">5.2.4. </span>Branches<a class="headerlink" href="#branches" title="Permalink to this heading"></a></h3>
+<section id="if-statement">
+<h4><span class="section-number">5.2.4.1. </span>If Statement<a class="headerlink" href="#if-statement" title="Permalink to this heading"></a></h4>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">IfStmt::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">conditionValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">condition</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">thenBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createBasicBlock</span><span class="p">(</span><span class="s">&quot;then&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">elseBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createBasicBlock</span><span class="p">(</span><span class="s">&quot;else&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">mergeBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createBasicBlock</span><span class="p">(</span><span class="s">&quot;merge&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateCondBr</span><span class="p">(</span><span class="n">conditionValue</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">(),</span><span class="w"> </span><span class="n">thenBlock</span><span class="p">,</span><span class="w"> </span><span class="n">elseBlock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">SetInsertPoint</span><span class="p">(</span><span class="n">thenBlock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">thenStmt</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateBr</span><span class="p">(</span><span class="n">mergeBlock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">SetInsertPoint</span><span class="p">(</span><span class="n">elseBlock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">elseStmt</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">elseStmt</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateBr</span><span class="p">(</span><span class="n">mergeBlock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">SetInsertPoint</span><span class="p">(</span><span class="n">mergeBlock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="while-statement">
+<h4><span class="section-number">5.2.4.2. </span>While Statement<a class="headerlink" href="#while-statement" title="Permalink to this heading"></a></h4>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">WhileStmt::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">headerBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createBasicBlock</span><span class="p">(</span><span class="s">&quot;header&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">bodyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createBasicBlock</span><span class="p">(</span><span class="s">&quot;body&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">exitBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createBasicBlock</span><span class="p">(</span><span class="s">&quot;exit&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateBr</span><span class="p">(</span><span class="n">headerBlock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">SetInsertPoint</span><span class="p">(</span><span class="n">headerBlock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">conditionValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">condition</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateCondBr</span><span class="p">(</span><span class="n">conditionValue</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">(),</span><span class="w"> </span><span class="n">bodyBlock</span><span class="p">,</span><span class="w"> </span><span class="n">exitBlock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">SetInsertPoint</span><span class="p">(</span><span class="n">bodyBlock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">body</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateBr</span><span class="p">(</span><span class="n">exitBlock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">SetInsertPoint</span><span class="p">(</span><span class="n">exitBlock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 </section>
