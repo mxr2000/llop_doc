@@ -56,3 +56,16 @@ Return Statement
 
     returnStatement: RETURN expr
     ;
+
+
+Output Statement
+----------------
+
+.. code-block:: 
+
+    output 1
+
+.. code-block:: antlr
+
+    outputStatement: OUTPUT expr
+    ;

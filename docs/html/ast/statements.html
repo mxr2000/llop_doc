@@ -40,7 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ast.html">2. Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ast.html">2. Abstract Syntax Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parser.html">3. Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../semantics.html">4. Semantics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../code_generation.html">5. Code Generation</a></li>
@@ -113,6 +113,16 @@
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">returnStatement</span><span class="p">:</span><span class="w"> </span><span class="no">RETURN</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="output-statement">
+<h2>Output Statement<a class="headerlink" href="#output-statement" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">outputStatement</span><span class="p">:</span><span class="w"> </span><span class="no">OUTPUT</span><span class="w"> </span><span class="nv">expr</span>
 <span class="p">;</span>
 </pre></div>
 </div>
