@@ -44,7 +44,7 @@ Example:
 
 .. code-block:: antlr
 
-    referenceType '::' expr
+    staticAccessExpr : referenceType '::' expr
     ;
 
 
@@ -59,7 +59,7 @@ Example:
 
 .. code-block:: antlr
 
-    IDENTIFIER argumentList
+    funCallExpr: IDENTIFIER argumentList
     ;
 
 
@@ -121,4 +121,34 @@ Example:
 
     expr OR expr
     ;
+
+Not
+-----
+
+Example:
+
+.. code-block:: 
+
+    NOT (a > b)
+
+.. code-block:: antlr
+
+    notExpr: NOT
+    ;
+
+
+Relational Expr
+---------------
+
+Example:
+
+.. code-block:: 
+
+    a >= 9
+
+.. code-block:: antlr
+
+    expr op=(EQ | NE | GT | LT | LE |GE) expr
+    ;
+
 

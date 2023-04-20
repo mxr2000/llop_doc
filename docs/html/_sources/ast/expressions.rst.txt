@@ -40,7 +40,7 @@ Example:
 
 .. code-block:: 
 
-    Person::compare
+    Personcompare
 
 .. code-block:: antlr
 
@@ -120,5 +120,20 @@ Example:
 .. code-block:: antlr
 
     expr OR expr
+    ;
+
+
+Relational Expr
+---------------
+
+Example:
+
+.. code-block:: 
+
+    a >= 9
+
+.. code-block:: antlr
+
+    expr op=(EQ | NE | GT | LT | LE |GE) expr
     ;
 

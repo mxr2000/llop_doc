@@ -112,3 +112,16 @@ New Object
     ;
 
 
+Number
+----------
+
+.. code-block:: 
+
+    NEW Person(10, 20)
+
+.. code-block:: antlr
+
+    NUMBER
+    ;
+    NUMBER : [0-9]+ 
+    ;

@@ -98,7 +98,7 @@
 <section id="static-access">
 <h2>Static Access<a class="headerlink" href="#static-access" title="Permalink to this heading"></a></h2>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Person</span><span class="p">::</span><span class="n">compare</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Personcompare</span>
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>referenceType &#39;::&#39; expr
@@ -157,6 +157,17 @@
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr OR expr
+;
+</pre></div>
+</div>
+</section>
+<section id="relational-expr">
+<h2>Relational Expr<a class="headerlink" href="#relational-expr" title="Permalink to this heading"></a></h2>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">&gt;=</span> <span class="mi">9</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr op=(EQ | NE | GT | LT | LE |GE) expr
 ;
 </pre></div>
 </div>
