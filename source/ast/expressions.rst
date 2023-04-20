@@ -10,13 +10,109 @@ Example:
 .. code-block:: 
 
     a + b
+    a - b
+
+.. code-block:: antlr
+
+    assignStatement: expr '=' expr
+    ;
 
 
 Is Expression
---------------------
+-------------
 
 Example:
 
 .. code-block:: 
 
     a + b
+
+.. code-block:: antlr
+
+    assignStatement: expr '=' expr
+    ;
+
+Static Access
+-------------
+
+Example:
+
+.. code-block:: 
+
+    Person::compare
+
+.. code-block:: antlr
+
+    referenceType '::' expr
+    ;
+
+Function Call
+-------------
+
+Example:
+
+.. code-block:: 
+
+    eat(b)
+
+.. code-block:: antlr
+
+    IDENTIFIER argumentList
+    ;
+
+Type Coercion
+-------------
+
+Example:
+
+.. code-block:: 
+
+    person.[Employee]
+
+.. code-block:: antlr
+
+    expr'.' '[' referenceType ']'
+    ;
+
+Access
+------
+
+Example:
+
+.. code-block:: 
+
+    person.[Employee]
+
+.. code-block:: antlr
+
+    expr'.' '[' referenceType ']'
+    ;
+
+
+And
+-----
+
+Example:
+
+.. code-block:: 
+
+    a == 10 AND b == 9
+
+.. code-block:: antlr
+
+    expr AND expr
+    ;
+
+Or
+-----
+
+Example:
+
+.. code-block:: 
+
+    a == 10 OR b == 9
+
+.. code-block:: antlr
+
+    expr OR expr
+    ;
