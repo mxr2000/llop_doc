@@ -58,6 +58,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#output-statement">2.2.5. Output Statement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#assignment">2.2.6. Assignment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#block-statement">2.2.7. Block Statement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#new-object">2.2.8. New Object</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#expressions">2.3. Expressions</a><ul>
@@ -244,6 +245,16 @@ We have not implemented static fields yet because of recursive dependencies.</p>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">blockStatement</span><span class="p">:</span><span class="w"> </span><span class="no">BEGIN</span><span class="w"> </span><span class="o">(</span><span class="nv">stmt</span><span class="o">)*</span><span class="w"> </span><span class="no">END</span>
 <span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="new-object">
+<h3><span class="section-number">2.2.8. </span>New Object<a class="headerlink" href="#new-object" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NEW</span> <span class="n">Person</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>NEW referenceType argumentList
+;
 </pre></div>
 </div>
 </section>

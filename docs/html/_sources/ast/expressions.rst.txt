@@ -32,6 +32,7 @@ Example:
     assignStatement: expr '=' expr
     ;
 
+
 Static Access
 -------------
 
@@ -45,6 +46,7 @@ Example:
 
     referenceType '::' expr
     ;
+
 
 Function Call
 -------------
@@ -60,6 +62,7 @@ Example:
     IDENTIFIER argumentList
     ;
 
+
 Type Coercion
 -------------
 
@@ -73,6 +76,7 @@ Example:
 
     expr'.' '[' referenceType ']'
     ;
+
 
 Access
 ------
@@ -103,6 +107,7 @@ Example:
     expr AND expr
     ;
 
+
 Or
 -----
 
@@ -116,3 +121,4 @@ Example:
 
     expr OR expr
     ;
+

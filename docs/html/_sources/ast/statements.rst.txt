@@ -98,3 +98,17 @@ Block Statement
 
     blockStatement: BEGIN (stmt)* END
     ;
+
+New Object
+----------
+
+.. code-block:: 
+
+    NEW Person(10, 20)
+
+.. code-block:: antlr
+
+    NEW referenceType argumentList
+    ;
+
+
