@@ -56,11 +56,19 @@
 <li class="toctree-l3"><a class="reference internal" href="#while-statement">2.2.3. While Statement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#return-statement">2.2.4. Return Statement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#output-statement">2.2.5. Output Statement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#assignment">2.2.6. Assignment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#block-statement">2.2.7. Block Statement</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#expressions">2.3. Expressions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#binary-expression">2.3.1. Binary Expression</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#is-expression">2.3.2. Is Expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#static-access">2.3.3. Static Access</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-call">2.3.4. Function Call</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#type-coercion">2.3.5. Type Coercion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#access">2.3.6. Access</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#and">2.3.7. And</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#or">2.3.8. Or</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#antlr">2.4. Antlr</a></li>
@@ -207,10 +215,34 @@ We have not implemented static fields yet because of recursive dependencies.</p>
 </section>
 <section id="output-statement">
 <h3><span class="section-number">2.2.5. </span>Output Statement<a class="headerlink" href="#output-statement" title="Permalink to this heading"></a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="mi">1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OUTPUT</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">outputStatement</span><span class="p">:</span><span class="w"> </span><span class="no">OUTPUT</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="assignment">
+<h3><span class="section-number">2.2.6. </span>Assignment<a class="headerlink" href="#assignment" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">assignStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="block-statement">
+<h3><span class="section-number">2.2.7. </span>Block Statement<a class="headerlink" href="#block-statement" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BEGIN</span>
+    <span class="n">VAR</span> <span class="n">a</span><span class="p">:</span> <span class="n">Int</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">OUTPUT</span> <span class="n">a</span>
+<span class="n">END</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">blockStatement</span><span class="p">:</span><span class="w"> </span><span class="no">BEGIN</span><span class="w"> </span><span class="o">(</span><span class="nv">stmt</span><span class="o">)*</span><span class="w"> </span><span class="no">END</span>
 <span class="p">;</span>
 </pre></div>
 </div>
@@ -222,6 +254,11 @@ We have not implemented static fields yet because of recursive dependencies.</p>
 <h3><span class="section-number">2.3.1. </span>Binary Expression<a class="headerlink" href="#binary-expression" title="Permalink to this heading"></a></h3>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">assignStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -229,6 +266,76 @@ We have not implemented static fields yet because of recursive dependencies.</p>
 <h3><span class="section-number">2.3.2. </span>Is Expression<a class="headerlink" href="#is-expression" title="Permalink to this heading"></a></h3>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">assignStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="static-access">
+<h3><span class="section-number">2.3.3. </span>Static Access<a class="headerlink" href="#static-access" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Person</span><span class="p">::</span><span class="n">compare</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>referenceType &#39;::&#39; expr
+;
+</pre></div>
+</div>
+</section>
+<section id="function-call">
+<h3><span class="section-number">2.3.4. </span>Function Call<a class="headerlink" href="#function-call" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eat</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>IDENTIFIER argumentList
+;
+</pre></div>
+</div>
+</section>
+<section id="type-coercion">
+<h3><span class="section-number">2.3.5. </span>Type Coercion<a class="headerlink" href="#type-coercion" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="p">[</span><span class="n">Employee</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr&#39;.&#39; &#39;[&#39; referenceType &#39;]&#39;
+;
+</pre></div>
+</div>
+</section>
+<section id="access">
+<h3><span class="section-number">2.3.6. </span>Access<a class="headerlink" href="#access" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="p">[</span><span class="n">Employee</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr&#39;.&#39; &#39;[&#39; referenceType &#39;]&#39;
+;
+</pre></div>
+</div>
+</section>
+<section id="and">
+<h3><span class="section-number">2.3.7. </span>And<a class="headerlink" href="#and" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">==</span> <span class="mi">10</span> <span class="n">AND</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">9</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr AND expr
+;
+</pre></div>
+</div>
+</section>
+<section id="or">
+<h3><span class="section-number">2.3.8. </span>Or<a class="headerlink" href="#or" title="Permalink to this heading"></a></h3>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">==</span> <span class="mi">10</span> <span class="n">OR</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">9</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr OR expr
+;
 </pre></div>
 </div>
 </section>

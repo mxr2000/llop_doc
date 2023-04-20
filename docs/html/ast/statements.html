@@ -119,10 +119,34 @@
 </section>
 <section id="output-statement">
 <h2>Output Statement<a class="headerlink" href="#output-statement" title="Permalink to this heading"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="mi">1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OUTPUT</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">outputStatement</span><span class="p">:</span><span class="w"> </span><span class="no">OUTPUT</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="assignment">
+<h2>Assignment<a class="headerlink" href="#assignment" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">assignStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="block-statement">
+<h2>Block Statement<a class="headerlink" href="#block-statement" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BEGIN</span>
+    <span class="n">VAR</span> <span class="n">a</span><span class="p">:</span> <span class="n">Int</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">OUTPUT</span> <span class="n">a</span>
+<span class="n">END</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">blockStatement</span><span class="p">:</span><span class="w"> </span><span class="no">BEGIN</span><span class="w"> </span><span class="o">(</span><span class="nv">stmt</span><span class="o">)*</span><span class="w"> </span><span class="no">END</span>
 <span class="p">;</span>
 </pre></div>
 </div>

@@ -63,9 +63,38 @@ Output Statement
 
 .. code-block:: 
 
-    output 1
+    OUTPUT 1
 
 .. code-block:: antlr
 
     outputStatement: OUTPUT expr
+    ;
+
+
+Assignment
+----------
+
+.. code-block:: 
+
+    a = 10
+
+.. code-block:: antlr
+
+    assignStatement: expr '=' expr
+    ;
+
+Block Statement
+---------------
+
+.. code-block:: 
+
+    BEGIN
+        VAR a: Int
+        a = 10
+        OUTPUT a
+    END
+
+.. code-block:: antlr
+
+    blockStatement: BEGIN (stmt)* END
     ;
