@@ -33,6 +33,20 @@ Determine which overloadded function to run:
 Class Method Call
 ---------------------
 
+1. We load the virtual table of the recevier object, which is pointered by the first element of the struct
+2. We load the function from the table at the index which is determined during compile time
+3. We computed the arguments, and call the function which is loaded from the table
+
+Example: employee.eat()
+
+.. code-block:: llvm
+
+    %9 = getelementptr inbounds %struct_Employee, ptr %var, i32 0, i32 0
+    %10 = load ptr, ptr %9, align 8
+    %11 = getelementptr [8 x ptr], ptr %10, i32 0, i32 7
+    %12 = load ptr, ptr %11, align 8
+    call void %12(ptr %var)
+
 .. code-block:: cpp
 
     GenValue *FuncCallExpr::generateClassMethodCall(Context *ctx, std::vector<GenValue *> &genArgs) {
