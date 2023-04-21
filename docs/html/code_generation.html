@@ -68,6 +68,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#not-expression">5.3.3. Not Expression</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#new-object-expression">5.4. New Object Expression</a></li>
 </ul>
 </li>
 </ul>
@@ -344,6 +345,52 @@ then the pointer of this method is the same with its parent’s one, else it wil
 </pre></div>
 </div>
 </section>
+</section>
+<section id="new-object-expression">
+<h2><span class="section-number">5.4. </span>New Object Expression<a class="headerlink" href="#new-object-expression" title="Permalink to this heading"></a></h2>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">uint64_t</span><span class="w"> </span><span class="nf">Context::getStructSize</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">classStruct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">classStructs</span><span class="p">[</span><span class="n">name</span><span class="p">];</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TheModule</span><span class="p">.</span><span class="n">getDataLayout</span><span class="p">().</span><span class="n">getStructLayout</span><span class="p">(</span><span class="n">classStruct</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getSizeInBytes</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">NewObjectExpr::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// get the struct size according to the module&#39;s data layout</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">sizeOfClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getStructSize</span><span class="p">(</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">());</span>
+
+<span class="w">    </span><span class="c1">// call calloc function</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Value</span><span class="w"> </span><span class="o">*&gt;</span><span class="w"> </span><span class="n">callocArgs</span><span class="p">;</span>
+<span class="w">    </span><span class="n">callocArgs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ConstantInt</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">    </span><span class="n">callocArgs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ConstantInt</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="n">sizeOfClass</span><span class="p">));</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">calloc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateCall</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CallocFunction</span><span class="p">,</span><span class="w"> </span><span class="n">callocArgs</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;calloced&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// set the object&#39;s vtable pointer</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">structType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getStructType</span><span class="p">(</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">());</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">vtable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getVtable</span><span class="p">(</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">());</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateStore</span><span class="p">(</span>
+<span class="w">        </span><span class="n">vtable</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateStructGEP</span><span class="p">(</span><span class="n">structType</span><span class="p">,</span><span class="w"> </span><span class="n">calloc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// prepare the arguments of the init function</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">;</span>
+<span class="w">    </span><span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">calloc</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">expr</span><span class="o">:</span><span class="w"> </span><span class="n">arguments</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">expr</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// load the init function from the vtable</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Value</span><span class="w"> </span><span class="o">*&gt;</span><span class="w"> </span><span class="n">indices</span><span class="p">;</span>
+<span class="w">    </span><span class="n">indices</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ConstantInt</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="n">indices</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ConstantInt</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span><span class="w"> </span><span class="c1">// index for init function</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">tableType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getVtableType</span><span class="p">(</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">());</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="o">*</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateGEP</span><span class="p">(</span><span class="n">tableType</span><span class="p">,</span><span class="w"> </span><span class="n">vtable</span><span class="p">,</span><span class="w"> </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateLoad</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntPtrType</span><span class="p">,</span><span class="w"> </span><span class="n">fp</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// call init function</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateCall</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">headerToLlvmType</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getMethodHeader</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">calloc</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 </section>
 
