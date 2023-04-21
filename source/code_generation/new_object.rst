@@ -9,6 +9,16 @@ To generate a new object, we need to do the following things:
 3. Set the first field of the struct to be the pointer to the virtual table
 4. Call the init function with all generated arguments 
 
+Example: NEW Person(10, 100)
+
+.. code-block:: llvm
+
+    %calloced = call ptr @calloc(i32 1, i32 16)
+    %3 = getelementptr inbounds %struct_Person, ptr %calloced, i32 0, i32 0
+    store ptr @vtable_Person, ptr %3, align 8
+    %4 = load ptr, ptr getelementptr inbounds ([5 x ptr], ptr @vtable_Person, i32 0, i32 2), align 8
+    %5 = call i32 %4(ptr %calloced, i32 10, i32 100)
+
 .. code-block:: cpp
 
     uint64_t Context::getStructSize(const std::string &name) {
