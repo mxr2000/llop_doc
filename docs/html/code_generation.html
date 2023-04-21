@@ -469,6 +469,17 @@ then the pointer of this method is the same with its parent’s one, else it wil
 <span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">popSymbolTable</span><span class="p">();</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
 <span class="p">}</span>
+
+<span class="n">llvm</span><span class="o">::</span><span class="n">Function</span><span class="w"> </span><span class="o">*</span><span class="nf">Context::createCurFunction</span><span class="p">(</span><span class="n">FuncHeader</span><span class="w"> </span><span class="o">*</span><span class="n">header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsInStaticMethod</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Static method should not call this function&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Function</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">headerToLlvmType</span><span class="p">(</span><span class="n">header</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="n">IsInStaticMethod</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">Function</span><span class="o">::</span><span class="n">ExternalLinkage</span><span class="p">,</span>
+<span class="w">            </span><span class="n">getMethodSignature</span><span class="p">(</span><span class="n">curStatic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curClass</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">curStatic</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">(),</span><span class="w"> </span><span class="n">header</span><span class="p">),</span>
+<span class="w">            </span><span class="n">TheModule</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
