@@ -402,6 +402,15 @@ then the pointer of this method is the same with its parent’s one, else it wil
 </section>
 <section id="function-generation">
 <h2><span class="section-number">5.5. </span>Function Generation<a class="headerlink" href="#function-generation" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>If the method is a static method, it must be created first, because during the generation of this method, it may call other static methods.</p></li>
+<li><p>Else if the class is a class method, we must create this method</p></li>
+<li><p>If the method is already generated, we just finish it.</p></li>
+<li><p>We create the top-level function table and load arguments into the table</p></li>
+<li><p>We generate the block statement</p></li>
+<li><p>If the function returns void and the last statement is not a return, we will insert a return void</p></li>
+<li><p>If the function returns another type and the last statement is not a return statemtn, we throw an error</p></li>
+</ol>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">FuncDecl::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">    </span><span class="c1">// If this function has already been generated, return</span>
@@ -415,7 +424,18 @@ then the pointer of this method is the same with its parent’s one, else it wil
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;return type of main must be int!&quot;</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createCurFunction</span><span class="p">(</span><span class="n">header</span><span class="p">);</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">Function</span><span class="o">*</span><span class="w"> </span><span class="n">function</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// If this is a static function, this funciton should be created before</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IsInStaticMethod</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getStaticMethod</span><span class="p">(</span><span class="n">header</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">function</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;static method is not found&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// This must be a class emthod that needs to be created first</span>
+<span class="w">        </span><span class="n">function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createCurFunction</span><span class="p">(</span><span class="n">header</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">setCurFunction</span><span class="p">(</span><span class="n">function</span><span class="p">);</span>
 <span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">pushSymbolTable</span><span class="p">();</span>
 <span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CurFunction</span><span class="p">();</span>
