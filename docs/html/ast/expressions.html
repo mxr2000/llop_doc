@@ -79,7 +79,9 @@
 <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">assignStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="nv">expr</span>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">multiplicativeExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="nv">op</span><span class="o">=(</span><span class="no">MUL</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">DIV</span><span class="o">)</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+<span class="nl">additiveExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="nv">op</span><span class="o">=(</span><span class="no">ADD</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">SUB</span><span class="o">)</span><span class="w"> </span><span class="nv">expr</span>
 <span class="p">;</span>
 </pre></div>
 </div>
@@ -87,10 +89,10 @@
 <section id="is-expression">
 <h2>Is Expression<a class="headerlink" href="#is-expression" title="Permalink to this heading"></a></h2>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="ow">is</span> <span class="n">Person</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">assignStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="nv">expr</span>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">isExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="no">IS</span><span class="w"> </span><span class="nv">referenceType</span>
 <span class="p">;</span>
 </pre></div>
 </div>
@@ -123,8 +125,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="p">[</span><span class="n">Employee</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr&#39;.&#39; &#39;[&#39; referenceType &#39;]&#39;
-;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">typeCoercionExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="w"> </span><span class="nv">referenceType</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -134,8 +136,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="p">[</span><span class="n">Employee</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr&#39;.&#39; &#39;[&#39; referenceType &#39;]&#39;
-;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">accessExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="w"> </span><span class="nv">referenceType</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -145,8 +147,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">==</span> <span class="mi">10</span> <span class="n">AND</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">9</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr AND expr
-;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">andExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="no">AND</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -156,8 +158,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">==</span> <span class="mi">10</span> <span class="n">OR</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">9</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr OR expr
-;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">orExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="no">OR</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -178,8 +180,30 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">&gt;=</span> <span class="mi">9</span>
 </pre></div>
 </div>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span>expr op=(EQ | NE | GT | LT | LE |GE) expr
-;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">relationalExpr</span><span class="p">:</span><span class="w"> </span><span class="nv">expr</span><span class="w"> </span><span class="nv">op</span><span class="o">=(</span><span class="no">EQ</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">NE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">GT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">LT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">LE</span><span class="w"> </span><span class="o">|</span><span class="no">GE</span><span class="o">)</span><span class="w"> </span><span class="nv">expr</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="new-object">
+<h2>New Object<a class="headerlink" href="#new-object" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NEW</span> <span class="n">Person</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">newExpr</span><span class="p">:</span><span class="w"> </span><span class="no">NEW</span><span class="w"> </span><span class="nv">referenceType</span><span class="w"> </span><span class="nv">argumentList</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="number">
+<h2>Number<a class="headerlink" href="#number" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NEW</span> <span class="n">Person</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">numExpr</span><span class="p">:</span><span class="w"> </span><span class="no">NUMBER</span>
+<span class="p">;</span>
+<span class="nl">NUMBER</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="o">+</span>
+<span class="p">;</span>
 </pre></div>
 </div>
 </section>

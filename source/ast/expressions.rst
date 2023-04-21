@@ -14,7 +14,9 @@ Example:
 
 .. code-block:: antlr
 
-    assignStatement: expr '=' expr
+    multiplicativeExpr: expr op=(MUL | DIV) expr
+    ;
+    additiveExpr: expr op=(ADD | SUB) expr
     ;
 
 
@@ -25,11 +27,11 @@ Example:
 
 .. code-block:: 
 
-    a + b
+    a is Person
 
 .. code-block:: antlr
 
-    assignStatement: expr '=' expr
+    isExpr: expr IS referenceType
     ;
 
 
@@ -74,7 +76,7 @@ Example:
 
 .. code-block:: antlr
 
-    expr'.' '[' referenceType ']'
+    typeCoercionExpr: expr'.' '[' referenceType ']'
     ;
 
 
@@ -89,7 +91,7 @@ Example:
 
 .. code-block:: antlr
 
-    expr'.' '[' referenceType ']'
+    accessExpr: expr'.' '[' referenceType ']'
     ;
 
 
@@ -104,7 +106,7 @@ Example:
 
 .. code-block:: antlr
 
-    expr AND expr
+    andExpr: expr AND expr
     ;
 
 
@@ -119,7 +121,7 @@ Example:
 
 .. code-block:: antlr
 
-    expr OR expr
+    orExpr: expr OR expr
     ;
 
 Not
@@ -148,7 +150,33 @@ Example:
 
 .. code-block:: antlr
 
-    expr op=(EQ | NE | GT | LT | LE |GE) expr
+    relationalExpr: expr op=(EQ | NE | GT | LT | LE |GE) expr
     ;
 
 
+New Object
+----------
+
+.. code-block:: 
+
+    NEW Person(10, 20)
+
+.. code-block:: antlr
+
+    newExpr: NEW referenceType argumentList
+    ;
+
+
+Number
+----------
+
+.. code-block:: 
+
+    NEW Person(10, 20)
+
+.. code-block:: antlr
+
+    numExpr: NUMBER
+    ;
+    NUMBER : [0-9]+ 
+    ;
