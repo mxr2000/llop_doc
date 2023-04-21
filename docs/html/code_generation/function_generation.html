@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Function Generation &mdash; llop  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            llop
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ast.html">2. Abstract Syntax Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">3. Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantics.html">4. Semantics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code_generation.html">5. Code Generation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">llop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Function Generation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code_generation/function_generation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="function-generation">
+<h1>Function Generation<a class="headerlink" href="#function-generation" title="Permalink to this heading"></a></h1>
+<ol class="arabic simple">
+<li><p>If the method is a static method, it must be created first, because during the generation of this method, it may call other static methods.</p></li>
+<li><p>Else if the class is a class method, we must create this method</p></li>
+<li><p>If the method is already generated, we just finish it.</p></li>
+<li><p>We create the top-level function table and load arguments into the table</p></li>
+<li><p>We generate the block statement</p></li>
+<li><p>If the function returns void and the last statement is not a return, we will insert a return void</p></li>
+<li><p>If the function returns another type and the last statement is not a return statemtn, we throw an error</p></li>
+</ol>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">FuncDecl::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// If this function has already been generated, return</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">GeneratedFunctions</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">setCurFunction</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">GeneratedFunctions</span><span class="p">[</span><span class="k">this</span><span class="p">]);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Main function must have a return type of integer</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">header</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;main&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">header</span><span class="o">-&gt;</span><span class="n">ReturnType</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">toString</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">&quot;Int&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;return type of main must be int!&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">Function</span><span class="o">*</span><span class="w"> </span><span class="n">function</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// If this is a static function, this funciton should be created before</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IsInStaticMethod</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getStaticMethod</span><span class="p">(</span><span class="n">header</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">function</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;static method is not found&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// This must be a class emthod that needs to be created first</span>
+<span class="w">        </span><span class="n">function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createCurFunction</span><span class="p">(</span><span class="n">header</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">setCurFunction</span><span class="p">(</span><span class="n">function</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">pushSymbolTable</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CurFunction</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// If this is a class method, the first argument should be the receiver pointer</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IsInStaticMethod</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">addValueToCurrentTable</span><span class="p">(</span><span class="s">&quot;self&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SelfGenValue</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CurClass</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">(),</span><span class="w"> </span><span class="n">f</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">().</span><span class="n">begin</span><span class="p">()));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">entryBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">createBasicBlock</span><span class="p">(</span><span class="s">&quot;entry&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">SetInsertPoint</span><span class="p">(</span><span class="n">entryBlock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Load arguments into local veriables</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">header</span><span class="o">-&gt;</span><span class="n">Params</span><span class="p">().</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IsInStaticMethod</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">alloc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateAlloca</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntPtrType</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateStore</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">().</span><span class="n">begin</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">alloc</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">addValueToCurrentTable</span><span class="p">(</span><span class="n">header</span><span class="o">-&gt;</span><span class="n">Params</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">(),</span>
+<span class="w">                                </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">header</span><span class="o">-&gt;</span><span class="n">Params</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">(),</span><span class="w"> </span><span class="n">alloc</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">block</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// A function must return if it does not have a void return type</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isLastLineReturnStmt</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">header</span><span class="o">-&gt;</span><span class="n">ReturnType</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">isVoid</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateRetVoid</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">//throw std::runtime_error(&quot;Last stmt is not return stmt&quot;);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">GeneratedFunctions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CurFunction</span><span class="p">()));</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">popSymbolTable</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">llvm</span><span class="o">::</span><span class="n">Function</span><span class="w"> </span><span class="o">*</span><span class="nf">Context::createCurFunction</span><span class="p">(</span><span class="n">FuncHeader</span><span class="w"> </span><span class="o">*</span><span class="n">header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsInStaticMethod</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Static method should not call this function&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Function</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">headerToLlvmType</span><span class="p">(</span><span class="n">header</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="n">IsInStaticMethod</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">Function</span><span class="o">::</span><span class="n">ExternalLinkage</span><span class="p">,</span>
+<span class="w">            </span><span class="n">getMethodSignature</span><span class="p">(</span><span class="n">curStatic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curClass</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">curStatic</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">(),</span><span class="w"> </span><span class="n">header</span><span class="p">),</span>
+<span class="w">            </span><span class="n">TheModule</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, mxr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
