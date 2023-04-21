@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Variable &mdash; llop  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            llop
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ast.html">2. Abstract Syntax Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">3. Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantics.html">4. Semantics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code_generation.html">5. Code Generation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">llop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Variable</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code_generation/variable.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="variable">
+<h1>Variable<a class="headerlink" href="#variable" title="Permalink to this heading"></a></h1>
+<p>Whenever we meets a variable declaration, we create an allocation and stores it to current symbol table</p>
+<p>The logic of loading a variable here is complecated:</p>
+<ol class="arabic simple">
+<li><p>If the receiver is null, we find if there is any local variable with the same name</p></li>
+<li><p>If we cannot find one, this could only be a field of an object</p></li>
+<li><p>If the receiver is self or it is null, we find if there is a field in this class with the same name</p></li>
+<li><p>Else, we find the field on the receiver type’s class struct</p></li>
+<li><p>If we could not find one, throw an error</p></li>
+<li><p>If the variable is the left value and its the top-level access, we return the pointer to the value rather than load the value</p></li>
+</ol>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">VariableDeclStmt::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateAlloca</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntPtrType</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">addValueToCurrentTable</span><span class="p">(</span><span class="n">Name</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">getLoadedValue</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="n">variable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">variable</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">variable</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="o">*</span><span class="n">loaded</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">isPointerType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateLoad</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntPtrType</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;var&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateLoad</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;var&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">loaded</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">VariableExpr::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// load pointer when it is in left value and top level access</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">loadPointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">LeftValueFlag</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">TopLevelAccess</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">GenValue</span><span class="o">*</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">findVariable</span><span class="p">(</span><span class="n">Name</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// We found a local variable, return</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">loadPointer</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">getLoadedValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">variable</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">Type</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">field</span><span class="p">;</span>
+<span class="w">    </span><span class="n">GenValue</span><span class="o">*</span><span class="w"> </span><span class="n">receiver</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// The receiver is null of self</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">isSelf</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getFieldRuntime</span><span class="p">(</span><span class="n">Name</span><span class="p">());</span>
+<span class="w">        </span><span class="n">receiver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Self</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// The receiver is not null(an object)</span>
+<span class="w">        </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getFieldRuntime</span><span class="p">(</span><span class="n">Name</span><span class="p">(),</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">());</span>
+<span class="w">        </span><span class="n">receiver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">second</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Field or variable: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Name</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; cannot be found&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="o">*</span><span class="n">address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateStructGEP</span><span class="p">(</span>
+<span class="w">            </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getStructType</span><span class="p">(</span><span class="n">receiver</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">toString</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">receiver</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">field</span><span class="p">.</span><span class="n">first</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">second</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">loadPointer</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">getLoadedValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, mxr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

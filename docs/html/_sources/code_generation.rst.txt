@@ -7,3 +7,5 @@
 .. include:: code_generation/boolean.rst
 .. include:: code_generation/new_object.rst
 .. include:: code_generation/function_generation.rst
+.. include:: code_generation/access.rst
+.. include:: code_generation/variable.rst

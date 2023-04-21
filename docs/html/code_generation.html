@@ -71,6 +71,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#new-object-expression">5.5. New Object Expression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#function-generation">5.6. Function Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#access">5.7. Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variable">5.8. Variable</a></li>
 </ul>
 </li>
 </ul>
@@ -549,6 +551,108 @@ then the pointer of this method is the same with its parent’s one, else it wil
 <span class="w">            </span><span class="n">Function</span><span class="o">::</span><span class="n">ExternalLinkage</span><span class="p">,</span>
 <span class="w">            </span><span class="n">getMethodSignature</span><span class="p">(</span><span class="n">curStatic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curClass</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">curStatic</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">(),</span><span class="w"> </span><span class="n">header</span><span class="p">),</span>
 <span class="w">            </span><span class="n">TheModule</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="access">
+<h2><span class="section-number">5.7. </span>Access<a class="headerlink" href="#access" title="Permalink to this heading"></a></h2>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">AccessExpr::codegen</span><span class="p">(</span><span class="n">Context</span><span class="o">*</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">incrementAccessLevel</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lhs</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">l</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">isPointerType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Lhs is not a reference type&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">decrementLevelAccess</span><span class="p">();</span><span class="w"> </span><span class="c1">// decrement level access before first accessing rhs</span>
+
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">setReceiver</span><span class="p">(</span><span class="n">l</span><span class="p">);</span><span class="w"> </span><span class="c1">// set receiver before accessing rhs</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rhs</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">clearReceiver</span><span class="p">();</span><span class="w"> </span><span class="c1">// clear receiver after accessing rhs</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">SelfExpr::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Self</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">SuperExpr::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Super</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">StaticAccessExpr::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">setStaticAccess</span><span class="p">(</span><span class="n">type</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">expr</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="variable">
+<h2><span class="section-number">5.8. </span>Variable<a class="headerlink" href="#variable" title="Permalink to this heading"></a></h2>
+<p>Whenever we meets a variable declaration, we create an allocation and stores it to current symbol table</p>
+<p>The logic of loading a variable here is complecated:</p>
+<ol class="arabic simple">
+<li><p>If the receiver is null, we find if there is any local variable with the same name</p></li>
+<li><p>If we cannot find one, this could only be a field of an object</p></li>
+<li><p>If the receiver is self or it is null, we find if there is a field in this class with the same name</p></li>
+<li><p>Else, we find the field on the receiver type’s class struct</p></li>
+<li><p>If we could not find one, throw an error</p></li>
+<li><p>If the variable is the left value and its the top-level access, we return the pointer to the value rather than load the value</p></li>
+</ol>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">VariableDeclStmt::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateAlloca</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntPtrType</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">addValueToCurrentTable</span><span class="p">(</span><span class="n">Name</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">getLoadedValue</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="n">variable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">variable</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">variable</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="o">*</span><span class="n">loaded</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">isPointerType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateLoad</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntPtrType</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;var&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateLoad</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;var&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">loaded</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">GenValue</span><span class="w"> </span><span class="o">*</span><span class="nf">VariableExpr::codegen</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// load pointer when it is in left value and top level access</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">loadPointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">LeftValueFlag</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">TopLevelAccess</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">GenValue</span><span class="o">*</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">findVariable</span><span class="p">(</span><span class="n">Name</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// We found a local variable, return</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">loadPointer</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">getLoadedValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">variable</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">Type</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">field</span><span class="p">;</span>
+<span class="w">    </span><span class="n">GenValue</span><span class="o">*</span><span class="w"> </span><span class="n">receiver</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// The receiver is null of self</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">isSelf</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getFieldRuntime</span><span class="p">(</span><span class="n">Name</span><span class="p">());</span>
+<span class="w">        </span><span class="n">receiver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Self</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// The receiver is not null(an object)</span>
+<span class="w">        </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getFieldRuntime</span><span class="p">(</span><span class="n">Name</span><span class="p">(),</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">());</span>
+<span class="w">        </span><span class="n">receiver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Receiver</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">second</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Field or variable: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Name</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; cannot be found&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="o">*</span><span class="n">address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateStructGEP</span><span class="p">(</span>
+<span class="w">            </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getStructType</span><span class="p">(</span><span class="n">receiver</span><span class="o">-&gt;</span><span class="n">Type</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">toString</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">receiver</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">field</span><span class="p">.</span><span class="n">first</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenValue</span><span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">second</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">loadPointer</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">getLoadedValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
