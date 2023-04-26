@@ -35,6 +35,8 @@ then the pointer of this method is the same with its parent's one, else it will 
 Type Id
 -------
 
+We create these only because the elements of vtables must be pointers rather than integer values
+
 .. code-block:: llvm
 
     @id_Object = internal constant i32 0

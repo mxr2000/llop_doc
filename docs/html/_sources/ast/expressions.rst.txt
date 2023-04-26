@@ -4,6 +4,7 @@ Expressions
 
 Binary Expression
 --------------------
+Used to compute ninary operations
 
 Example:
 
@@ -53,6 +54,8 @@ Example:
 Function Call
 -------------
 
+Used to call static functions or access static variables(not inmplemented yet)
+
 Example:
 
 .. code-block:: 
@@ -67,6 +70,8 @@ Example:
 
 Type Coercion
 -------------
+
+Used to coerce one type to another
 
 Example:
 
@@ -83,6 +88,8 @@ Example:
 Access
 ------
 
+Used to call a class method or access a field from an object
+
 Example:
 
 .. code-block:: 
@@ -97,6 +104,8 @@ Example:
 
 And
 -----
+
+Used to compute a binary and boolean operation
 
 Example:
 
@@ -157,6 +166,8 @@ Example:
 New Object
 ----------
 
+Create a new object 
+
 .. code-block:: 
 
     NEW Person(10, 20)
@@ -180,3 +191,34 @@ Number
     ;
     NUMBER : [0-9]+ 
     ;
+
+
+Array Creation
+--------------
+
+Create a new array. The element type can be basic types, class or another array
+
+.. code-block::
+
+    NEW [Int](5)
+    NEW [Person](8)
+    NEW [[Int]](10 * 8)
+
+.. code-block:: antlr
+
+    newArrayExpr: NEW arrayType '(' expr ')'
+
+
+Array Index
+-----------
+
+Index an array
+
+.. code-block:: cpp
+
+    arr[10]
+    arr[2][3 * 5]
+
+.. code-block:: antlr
+
+    arrayIndexExpr: expr '[' expr ']'

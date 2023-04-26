@@ -73,6 +73,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#function-generation">5.6. Function Generation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#access">5.7. Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#variable">5.8. Variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#array">5.9. Array</a></li>
 </ul>
 </li>
 </ul>
@@ -197,6 +198,7 @@ then the pointer of this method is the same with its parent’s one, else it wil
 </section>
 <section id="type-id">
 <h3><span class="section-number">5.2.3. </span>Type Id<a class="headerlink" href="#type-id" title="Permalink to this heading"></a></h3>
+<p>We create these only because the elements of vtables must be pointers rather than integer values</p>
 <div class="highlight-llvm notranslate"><div class="highlight"><pre><span></span><span class="vg">@id_Object</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">internal</span><span class="w"> </span><span class="k">constant</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="m">0</span>
 <span class="vg">@id_Person</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">internal</span><span class="w"> </span><span class="k">constant</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="m">1</span>
 <span class="vg">@id_Employee</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">internal</span><span class="w"> </span><span class="k">constant</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="m">2</span>
@@ -679,6 +681,32 @@ then the pointer of this method is the same with its parent’s one, else it wil
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="array">
+<h2><span class="section-number">5.9. </span>Array<a class="headerlink" href="#array" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Calculate the size of the array(length * size of element)</p></li>
+<li><p>Call Calloc with the size</p></li>
+</ol>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">elementSize</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arrayType</span><span class="o">-&gt;</span><span class="n">ElementType</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">isValueType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">elementSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getValueSize</span><span class="p">(</span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">ValueType</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">arrayType</span><span class="o">-&gt;</span><span class="n">ElementType</span><span class="p">()));</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">elementSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">getPointerSize</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">countExpr</span><span class="o">-&gt;</span><span class="n">codegen</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateMul</span><span class="p">(</span><span class="n">ConstantInt</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="n">elementSize</span><span class="p">),</span><span class="w"> </span><span class="n">count</span><span class="o">-&gt;</span><span class="n">Value</span><span class="p">());</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Value</span><span class="w"> </span><span class="o">*&gt;</span><span class="w"> </span><span class="n">callocArgs</span><span class="p">;</span>
+<span class="n">callocArgs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ConstantInt</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">IntType</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="n">callocArgs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">calloc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Builder</span><span class="p">().</span><span class="n">CreateCall</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CallocFunction</span><span class="p">,</span><span class="w"> </span><span class="n">callocArgs</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;calloced&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Calculate the index</p></li>
+<li><p>Use GetElementPtr to access</p></li>
+<li><p>When it’s a left value and it’s direcly assigned by values, load the address rather then the value in the address</p></li>
+</ol>
 </section>
 </section>
 

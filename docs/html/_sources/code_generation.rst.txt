@@ -9,3 +9,4 @@
 .. include:: code_generation/function_generation.rst
 .. include:: code_generation/access.rst
 .. include:: code_generation/variable.rst
+.. include:: code_generation/array.rst

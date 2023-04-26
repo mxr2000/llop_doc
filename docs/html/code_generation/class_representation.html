@@ -95,6 +95,7 @@ then the pointer of this method is the same with its parent’s one, else it wil
 </section>
 <section id="type-id">
 <h2>Type Id<a class="headerlink" href="#type-id" title="Permalink to this heading"></a></h2>
+<p>We create these only because the elements of vtables must be pointers rather than integer values</p>
 <div class="highlight-llvm notranslate"><div class="highlight"><pre><span></span><span class="vg">@id_Object</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">internal</span><span class="w"> </span><span class="k">constant</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="m">0</span>
 <span class="vg">@id_Person</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">internal</span><span class="w"> </span><span class="k">constant</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="m">1</span>
 <span class="vg">@id_Employee</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">internal</span><span class="w"> </span><span class="k">constant</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="m">2</span>
